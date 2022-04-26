@@ -28,22 +28,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         with(binding) {
-            viewModel.state.observe(this@MainActivity) {
-                when (it) {
-                    is Error -> Toast.makeText(
-                        this@MainActivity,
-                        "You did not entered value",
-                        Toast.LENGTH_SHORT
-                    ).show()
+            viewModel.state.observe(this@MainActivity) { state ->
+                progressBarLoading.isGone = true
+                buttonCalculate.isEnabled = true
+                when (state) {
+                    is Error -> {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "You did not entered value",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     is Progress -> {
                         progressBarLoading.isGone = false
-                        buttonCalculate.isEnabled = true
+                        buttonCalculate.isEnabled = false
                     }
-                    is Factorial -> textViewFactorial.text = it.value
+                    is Factorial -> {
+                        textViewFactorial.text = state.value
+                    }
                 }
-
-
-
             }
         }
     }
